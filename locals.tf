@@ -1,4 +1,10 @@
 
+data "aws_security_groups" "securitygroups" {
+  tags = {
+    "${local.cluster_tag}" = "owned"
+  }
+}
+
 data "aws_ami" "al2gpu_ami" {
   owners      = ["amazon"]
   most_recent = true
@@ -26,6 +32,12 @@ locals {
   s3_buckets                                = concat(local.s3_instance_buckets, [aws_s3_bucket.bucket_logs.bucket], local.license_server_bucket)
   # Using a one-line command for gpuPostUserData to avoid issues due to different line endings between Windows and Linux.
   gpuPostUserData = "curl -fSsl -O https://us.download.nvidia.com/tesla/${var.gpuNvidiaDriverVersion}/NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \nchmod +x NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \n./NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run -s --no-dkms --install-libglvnd"
+
+  security_groups = toset(flatten([
+    for source in data.aws_security_groups.securitygroups.ids : [
+      for target in data.aws_security_groups.securitygroups.ids : "${source},${target}" if source != target
+    ]
+  ]))
 
   default_managed_node_pools = {
     "default" = {

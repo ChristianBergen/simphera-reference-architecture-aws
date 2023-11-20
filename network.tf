@@ -104,3 +104,19 @@ resource "aws_iam_role_policy_attachment" "flowlogs_attachment" {
   role       = aws_iam_role.flowlogs_role.id
   policy_arn = aws_iam_policy.flowlogs_policy.arn
 }
+
+
+
+data "aws_security_groups" "securitygroups" {
+  tags = var.tags
+}
+
+locals {
+  cluster_tag = var.infrastructurename
+  security_groups = toset(flatten([
+    for source in data.aws_security_groups.securitygroups.ids : [
+      for target in data.aws_security_groups.securitygroups.ids : "${source},${target}" if source != target
+    ]
+  ]))
+}
+

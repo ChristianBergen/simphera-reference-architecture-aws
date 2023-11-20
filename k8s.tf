@@ -89,3 +89,14 @@ resource "aws_autoscaling_group_tag" "gpuexecnodes" {
     propagate_at_launch = true
   }
 }
+
+resource "aws_security_group_rule" "securitygroups_rules" {
+  for_each                 = local.security_groups
+  description              = "Access between node groups."
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "TCP"
+  source_security_group_id = split(",", each.key)[0]
+  security_group_id        = split(",", each.key)[1]
+}
