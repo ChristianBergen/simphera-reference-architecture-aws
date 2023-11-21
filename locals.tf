@@ -87,6 +87,7 @@ locals {
           delete_on_termination = false
           encrypted             = false
           volume_size           = 110
+          volume_type           = "gp3"
         }
       }
       k8s_labels = {
