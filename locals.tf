@@ -89,6 +89,7 @@ locals {
           volume_size           = 110
           volume_type           = "gp2"
         }
+      }
       k8s_labels = {
         "purpose" = "gpu"
       }
