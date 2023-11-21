@@ -90,13 +90,19 @@ resource "aws_autoscaling_group_tag" "gpuexecnodes" {
   }
 }
 
-resource "aws_security_group_rule" "securitygroups_rules" {
-  for_each                 = local.security_groups
-  description              = "Access between node groups."
-  type                     = "ingress"
-  from_port                = 0
-  to_port                  = 65535
-  protocol                 = "all"
-  source_security_group_id = split(",", each.key)[0]
-  security_group_id        = split(",", each.key)[1]
+# resource "aws_security_group_rule" "securitygroups_rules" {
+#   for_each                 = local.security_groups
+#   description              = "Access between node groups."
+#   type                     = "ingress"
+#   from_port                = 0
+#   to_port                  = 65535
+#   protocol                 = "all"
+#   source_security_group_id = split(",", each.key)[0]
+#   security_group_id        = split(",", each.key)[1]
+# }
+
+resource "aws_ebs_volume" "aurelion_image_volume" {
+  availability_zone = var.region
+  size              = 100
+  tags              = var.tags
 }

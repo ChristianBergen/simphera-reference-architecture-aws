@@ -1,7 +1,8 @@
 
-data "aws_security_groups" "securitygroups" {
-  tags = var.tags
-}
+# data "aws_security_groups" "securitygroups" {
+#   tags = var.tags
+
+# }
 
 data "aws_ami" "al2gpu_ami" {
   owners      = ["amazon"]
@@ -31,11 +32,11 @@ locals {
   # Using a one-line command for gpuPostUserData to avoid issues due to different line endings between Windows and Linux.
   gpuPostUserData = "curl -fSsl -O https://us.download.nvidia.com/tesla/${var.gpuNvidiaDriverVersion}/NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \nchmod +x NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \n./NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run -s --no-dkms --install-libglvnd"
 
-  security_groups = toset(flatten([
-    for source in data.aws_security_groups.securitygroups.ids : [
-      for target in data.aws_security_groups.securitygroups.ids : "${source},${target}" if source != target
-    ]
-  ]))
+  # security_groups = toset(flatten([
+  #   for source in data.aws_security_groups.securitygroups.ids : [
+  #     for target in data.aws_security_groups.securitygroups.ids : "${source},${target}" if source != target
+  #   ]
+  # ]))
 
   default_managed_node_pools = {
     "default" = {
@@ -79,6 +80,10 @@ locals {
       custom_ami_id          = data.aws_ami.al2gpu_ami.image_id
       create_launch_template = true
       post_userdata          = local.gpuPostUserData
+      ebs_block_device = {
+        device_name = "/dev/xvdf"
+        volume_id   = aws_ebs_volume.aurelion_image_volume.id
+      }
       k8s_labels = {
         "purpose" = "gpu"
       }
