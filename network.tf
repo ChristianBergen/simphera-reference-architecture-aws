@@ -105,12 +105,6 @@ resource "aws_iam_role_policy_attachment" "flowlogs_attachment" {
   policy_arn = aws_iam_policy.flowlogs_policy.arn
 }
 
-
-
-data "aws_security_groups" "securitygroups" {
-  tags = var.tags
-}
-
 locals {
   cluster_tag = var.infrastructurename
   security_groups = toset(flatten([
