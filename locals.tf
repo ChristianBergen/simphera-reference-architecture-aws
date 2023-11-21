@@ -81,8 +81,9 @@ locals {
       create_launch_template = true
       post_userdata          = local.gpuPostUserData
       ebs_block_device = {
-        device_name = "/dev/xvdf"
-        volume_id   = aws_ebs_volume.aurelion_image_volume.id
+        device_name           = "/dev/xvdf"
+        volume_id             = aws_ebs_volume.aurelion_image_volume.id
+        delete_on_termination = false
       }
       k8s_labels = {
         "purpose" = "gpu"

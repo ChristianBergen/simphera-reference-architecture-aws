@@ -103,6 +103,7 @@ resource "aws_autoscaling_group_tag" "gpuexecnodes" {
 
 resource "aws_ebs_volume" "aurelion_image_volume" {
   availability_zone = "${var.region}a"
-  size              = 100
+  size              = 110
   tags              = var.tags
+  encrypted         = false
 }
