@@ -87,9 +87,8 @@ locals {
           delete_on_termination = false
           encrypted             = false
           volume_size           = 110
-          volume_type           = gp2
+          volume_type           = "gp2"
         }
-      }
       k8s_labels = {
         "purpose" = "gpu"
       }
