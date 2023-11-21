@@ -105,5 +105,4 @@ resource "aws_ebs_volume" "aurelion_image_volume" {
   availability_zone = "${var.region}a"
   size              = 110
   tags              = var.tags
-  encrypted         = false
 }

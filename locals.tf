@@ -80,11 +80,14 @@ locals {
       custom_ami_id          = data.aws_ami.al2gpu_ami.image_id
       create_launch_template = true
       post_userdata          = local.gpuPostUserData
-      block_device_mappings  = {
-        device_name           = "/dev/xvdf"
+      block_device_mappings = {
+        device_name = "/dev/xvdf"
         ebs = {
           volume_id             = aws_ebs_volume.aurelion_image_volume.id
           delete_on_termination = false
+          encrypted             = false
+          volume_size           = 110
+          volume_type           = gp2
         }
       }
       k8s_labels = {
