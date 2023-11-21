@@ -1,8 +1,6 @@
 
 data "aws_security_groups" "securitygroups" {
-  tags = {
-    "${local.cluster_tag}" = "owned"
-  }
+  tags = var.tags
 }
 
 data "aws_ami" "al2gpu_ami" {
