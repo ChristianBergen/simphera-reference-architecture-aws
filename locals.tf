@@ -81,8 +81,8 @@ locals {
       create_launch_template = true
       post_userdata          = local.gpuPostUserData
       block_device_mappings = {
-        device_name = "/dev/xvdf"
         ebs = {
+          device_name           = "/dev/xvdf"
           volume_id             = aws_ebs_volume.aurelion_image_volume.id
           delete_on_termination = false
           encrypted             = false
