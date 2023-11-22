@@ -226,10 +226,3 @@ variable "cluster_autoscaler_helm_config" {
   description = "Cluster Autoscaler Helm Config"
   type        = any
 }
-
-variable "region" {
-  description = "The availability zone of the cluster, e.g. eu-central-1"
-  default     = "eu-central-1"
-  type        = string
-}
-

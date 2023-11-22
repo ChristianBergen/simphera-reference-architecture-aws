@@ -101,14 +101,27 @@ resource "aws_autoscaling_group_tag" "gpuexecnodes" {
 #   security_group_id        = split(",", each.key)[1]
 # }
 
-resource "aws_ebs_volume" "aurelion_image_volume" {
-  availability_zone = "${var.region}a"
-  size              = 77
-  tags              = var.tags
+# resource "aws_ebs_volume" "aurelion_image_volume" {
+#   availability_zone = "${var.region}a"
+#   size              = 77
+#   tags              = var.tags
+# }
+
+# resource "aws_ebs_snapshot" "aurelion_image_volume_snapshot" {
+#   volume_id   = aws_ebs_volume.aurelion_image_volume.id
+#   description = "Snapshot of the volume containing an AURELION container image."
+#   tags        = var.tags
+# }
+
+resource "aws_efs_file_system" "aurelion_image" {
+  creation_token = "EFS-AurelionImage-123456"
+  tags = {
+    Name = "EFS-AurelionImage-123456"
+  }
 }
 
-resource "aws_ebs_snapshot" "aurelion_image_volume_snapshot" {
-  volume_id   = aws_ebs_volume.aurelion_image_volume.id
-  description = "Snapshot of the volume containing an AURELION container image."
-  tags        = var.tags
+resource "aws_efs_mount_target" "aurelion_image_mnt_target" {
+  file_system_id = aws_efs_file_system.aurelion_image.id
+  subnet_id      = module.vpc.private_subnets
 }
+

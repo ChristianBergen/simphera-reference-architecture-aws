@@ -30,7 +30,7 @@ locals {
   license_server_bucket                     = var.licenseServer ? [aws_s3_bucket.license_server_bucket[0].bucket] : []
   s3_buckets                                = concat(local.s3_instance_buckets, [aws_s3_bucket.bucket_logs.bucket], local.license_server_bucket)
   # Using a one-line command for gpuPostUserData to avoid issues due to different line endings between Windows and Linux.
-  gpuPostUserData = "curl -fSsl -O https://us.download.nvidia.com/tesla/${var.gpuNvidiaDriverVersion}/NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \nchmod +x NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \n./NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run -s --no-dkms --install-libglvnd"
+  gpuPostUserData = "curl -fSsl -O https://us.download.nvidia.com/tesla/${var.gpuNvidiaDriverVersion}/NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \nchmod +x NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run \n./NVIDIA-Linux-x86_64-${var.gpuNvidiaDriverVersion}.run -s --no-dkms --install-libglvnd \nmkdir /mnt/efs-aur \nmount -t efs ${aws_efs_file_system.aurelion_image.id}:/ /mnt/efs-aur \ntouch /mnt/efs-aur/test.txt"
 
   # security_groups = toset(flatten([
   #   for source in data.aws_security_groups.securitygroups.ids : [
@@ -80,16 +80,6 @@ locals {
       custom_ami_id          = data.aws_ami.al2gpu_ami.image_id
       create_launch_template = true
       post_userdata          = local.gpuPostUserData
-      block_device_mappings = {
-        ebs = {
-          device_name           = "/dev/xvdf"
-          volume_id             = aws_ebs_volume.aurelion_image_volume.id
-          delete_on_termination = true
-          encrypted             = false
-          # volume_size           = 110
-          # volume_type           = "gp3"
-        }
-      }
       k8s_labels = {
         "purpose" = "gpu"
       }
