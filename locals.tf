@@ -82,12 +82,12 @@ locals {
       post_userdata          = local.gpuPostUserData
       block_device_mappings = {
         ebs = {
-          device_name = "/dev/xvdf"
-          #volume_id             = aws_ebs_volume.aurelion_image_volume.id
-          delete_on_termination = false
+          device_name           = "/dev/xvdf"
+          volume_id             = aws_ebs_volume.aurelion_image_volume.id
+          delete_on_termination = true
           encrypted             = false
-          volume_size           = 110
-          volume_type           = "gp3"
+          # volume_size           = 110
+          # volume_type           = "gp3"
         }
       }
       k8s_labels = {

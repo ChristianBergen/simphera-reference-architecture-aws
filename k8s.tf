@@ -101,8 +101,14 @@ resource "aws_autoscaling_group_tag" "gpuexecnodes" {
 #   security_group_id        = split(",", each.key)[1]
 # }
 
-# resource "aws_ebs_volume" "aurelion_image_volume" {
-#   availability_zone = "${var.region}a"
-#   size              = 110
-#   tags              = var.tags
-# }
+resource "aws_ebs_volume" "aurelion_image_volume" {
+  availability_zone = "${var.region}a"
+  size              = 77
+  tags              = var.tags
+}
+
+resource "aws_ebs_snapshot" "aurelion_image_volume_snapshot" {
+  volume_id   = aws_ebs_volume.aurelion_image_volume.id
+  description = "Snapshot of the volume containing an AURELION container image."
+  tags        = var.tags
+}
