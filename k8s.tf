@@ -122,5 +122,5 @@ resource "aws_efs_file_system" "aurelion_image" {
 
 resource "aws_efs_mount_target" "aurelion_image_mnt_target" {
   file_system_id = aws_efs_file_system.aurelion_image.id
-  subnet_id      = module.vpc.aws_subnet.privat[0]
+  subnet_id      = module.vpc.private_subnets[0]
 }
