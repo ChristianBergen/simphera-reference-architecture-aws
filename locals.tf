@@ -82,8 +82,8 @@ locals {
       post_userdata          = local.gpuPostUserData
       block_device_mappings = {
         ebs = {
-          device_name           = "/dev/xvdf"
-          volume_id             = aws_ebs_volume.aurelion_image_volume.id
+          device_name = "/dev/xvdf"
+          #volume_id             = aws_ebs_volume.aurelion_image_volume.id
           delete_on_termination = false
           encrypted             = false
           volume_size           = 110
